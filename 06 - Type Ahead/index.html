@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+  <script>
+    const endpoint =
+      'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+    let cities = [];
+
+    fetch(endpoint)
+      .then(blob => blob.json())
+      //.then(data => cities = data); -- cities를 let 타입을 설정했을 경우
+      .then(data => cities.push(...data));
+    // .then(data => cities.push(data));
+
+    /*
+      정규식 메소드
+      1.test : 대응되는 문자열이 있는지 검사 T, F 반환
+      2.exec : 대응되는 문자열의 정보를 검사 후 배열 반환 , 없다면 null 반환
+      3.match : 대응되는 문자열이 있는지 검사 후 배열 반환
+      4.search : 대응되는 문자열이 있는지 검사, 대응된 부분의 index 없다면 -1 반환 
+      5.replace : 대응되는 문자열을 찾아 다른 문자열로 바꿀 때 사용 
+      6.split : 정규식, 문자열로 대상 문자열을 나누어 배열로 반환
+    */
+    function findMatches(wordToMatch, cities) {
+      return cities.filter(place => {
+        const regex = new RegExp(wordToMatch, 'gi');
+        return place.city.match(regex) || place.state.match(regex);
+      });
+    }
+
+    function numberWithCommas(x) {
+      //숫자 문자열에 , 구분자를 섞어 넣기
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    function displayMatches() {
+      //console.log(this.value); HTML Element 내에 사용자가 새롭게 작성한 내용 반환
+      const matchArray = findMatches(this.value, cities);
+
+      //HTML 요소를 추가
+      const html = matchArray.map(place => {
+        const regex = new RegExp(this.value, 'gi');
+        const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
+        const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+
+        return `
+      <li>
+        <span class="name">${cityName}, ${stateName}</span>
+        <span class="population">${numberWithCommas(place.population)}</span>
+      </li>
+    `;
+      }).join(''); //return 되는 li 요소의 공백을 제거하고 합치기
+
+      suggestions.innerHTML = html; //html elements로 삽입
+    }
+
+    const searchInput = document.querySelector('.search'); //input
+    const suggestions = document.querySelector('.suggestions'); //ul
+
+    searchInput.addEventListener('change', displayMatches); //value 작성 후, input 외부를 클릭했을 때
+    searchInput.addEventListener('keyup', displayMatches); //value를 작성하는 순간마다
+  </script>
+</body>
+
+</html>
