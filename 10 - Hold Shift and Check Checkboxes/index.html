@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Hold Shift to Check Multiple Checkboxes</title>
+</head>
+
+<body>
+  <style>
+    html {
+      font-family: sans-serif;
+      background: #ffc600;
+    }
+
+    .inbox {
+      max-width: 400px;
+      margin: 50px auto;
+      background: white;
+      border-radius: 5px;
+      box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #F1F1F1;
+    }
+
+    .item:last-child {
+      border-bottom: 0;
+    }
+
+
+    input:checked+p {
+      background: #F9F9F9;
+      text-decoration: line-through;
+    }
+
+    input[type="checkbox"] {
+      margin: 20px;
+    }
+
+    p {
+      margin: 0;
+      padding: 20px;
+      transition: background 0.2s;
+      flex: 1;
+      font-family: 'helvetica neue';
+      font-size: 20px;
+      font-weight: 200;
+      border-left: 1px solid #D1E2FF;
+    }
+  </style>
+
+  <div class="inbox">
+    <div class="item">
+      <input type="checkbox">
+      <p>This is an inbox layout.</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Check one item</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Hold down your Shift key</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Check a lower item</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Everything in between should also be set to checked</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Try do it without any libraries</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Just regular JavaScript</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Good Luck!</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Don't forget to tweet your result!</p>
+    </div>
+  </div>
+
+  <script>
+    const checkboxes = document.querySelectorAll('.inbox input[type="checkbox"]'); //.input 하위의 input 중 type=checkbox
+
+    let lastChecked; //check 시작점
+
+    function handleCheck(e) {
+
+      let inBetween = false;
+
+      if (e.shiftKey && this.checked) { //shiftKey 클릭 여부, checkout의 checked 여부 확인
+
+        checkboxes.forEach(checkbox => {
+          //this = 현재 클릭한 checkbox
+          if (checkbox === this || checkbox === lastChecked) {
+            inBetween = !inBetween;
+            //처음 클릭 위치에서 inBetween = true
+            //마지막 클릭 위치에서 inBetween = false
+          }
+
+          if (inBetween) {
+            //inBetween이 true일 때, checked를 true로 변경
+            checkbox.checked = true;
+          }
+
+        });
+      }
+
+      //Shift가 눌릴 것을 대비하여 현재 클릭 위치를 저장
+      lastChecked = this;
+    }
+
+    //querySelectorAll -> NodeList
+    checkboxes.forEach(checkbox => checkbox.addEventListener('click', handleCheck)); //click 이벤트 확인
+  </script>
+</body>
+
+</html>
