@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+
+<body>
+  <!-- 웹 화면 위에 동적인 어떤 것을 표현할 때 -->
+  <canvas id="draw" width="800" height="800"></canvas>
+  <script>
+    const canvas = document.querySelector('#draw');
+    const ctx = canvas.getContext('2d'); //context를 2d로 지정
+
+    //canvas의 크기를 window의 크기로 변경
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    //canvas 내 context 스타일 
+    ctx.lineJoin = 'round'; //선이 꺾이는 부분의 스타일을 지정 (bevel, round, miter)
+    ctx.lineCap = 'round'; //선 끝 부분의 스타일을 지정 (butt, round, square)
+
+    ctx.lineWidth = 100;
+    //ctx.globalCompositeOperation = 'multiply'; //stroke에 대해 특수 효과를 지정
+    //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
+
+    let isDrawing = false; //마우스 움직임에 따라 Stroke의 여부 결정
+
+    let lastX = 0;
+    let lastY = 0;
+
+    let hue = 0;
+    let direction = true;
+
+    function draw(e) {
+      if (!isDrawing) return; //그리기 허용 여부에 따라 그리기 조절
+      // console.log(e);
+      ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`; //hsl = 색상판, hsl(value, 채도, 명도)
+
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY); // 시작 지점
+
+      ctx.lineTo(e.offsetX, e.offsetY); // 라인이 끝나는 지점(e에 따라 동적으로 변화)
+
+      ctx.stroke(); //그리기
+
+      [lastX, lastY] = [e.offsetX, e.offsetY]; //시작 좌표를 지속해서 변경 -> stroke가 이어짐
+      //lastX = e.offsetX;
+      //lastY = e.offsetY;
+
+      hue++; //색의 변화
+
+      if (hue >= 360) { //재시작
+        hue = 0;
+      }
+      if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) { //라인 크기 한정요소
+        direction = !direction;
+      }
+
+      if (direction) {
+        ctx.lineWidth++;
+      } else {
+        ctx.lineWidth--;
+      }
+
+    }
+
+    canvas.addEventListener('mousemove', draw); //마우스를 움직일 때 그리기 시작 
+
+    canvas.addEventListener('mousedown', (e) => { //마우스가 눌렸을 때
+      isDrawing = true; //그리기 허용
+
+      //마우스가 눌렸을 때, 해당 offset을 stroke의 시작 X,Y 좌표로 사용
+      [lastX, lastY] = [e.offsetX, e.offsetY];
+      // console.log(lastX, lastY);
+      // console.log(e.offsetX, e.offsetY);
+    });
+
+    //마우스가 눌리지 않았거나 window 밖으로 나가는 경우 그리기 허용 X
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mouseout', () => isDrawing = false);
+  </script>
+
+  <style>
+    html,
+    body {
+      margin: 0;
+    }
+  </style>
+
+</body>
+
+</html>
