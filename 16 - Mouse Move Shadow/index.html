@@ -1,95 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mouse Shadow</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <title>Mouse Shadow</title>
-</head>
+  <body>
+    <div class="hero">
+      <h1 contenteditable>🔥WOAH!</h1>
+    </div>
 
-<body>
+    <style>
+      html {
+        color: black;
+        font-family: sans-serif;
+      }
 
-  <div class="hero">
-    <h1 contenteditable>🔥WOAH!</h1>
-  </div>
+      body {
+        margin: 0;
+      }
 
-  <style>
-    html {
-      color: black;
-      font-family: sans-serif;
-    }
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: black;
+      }
 
-    body {
-      margin: 0;
-    }
+      h1 {
+        text-shadow: 10px 10px 0 rgba(0, 0, 0, 1);
+        font-size: 100px;
+      }
+    </style>
 
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: black;
-    }
+    <script>
+      const hero = document.querySelector(".hero");
+      const text = hero.querySelector("h1");
 
-    h1 {
-      text-shadow: 10px 10px 0 rgba(0, 0, 0, 1);
-      font-size: 100px;
-    }
-  </style>
+      const walk = 50; // 마우스 무브먼트로 움직일 수 있는 최대 px을 지정
 
-  <script>
-    const hero = document.querySelector('.hero');
-    const text = hero.querySelector('h1');
-
-    const walk = 50; // 마우스 무브먼트로 움직일 수 있는 최대 px을 지정
-
-    function shadow(e) {
-      /*
+      function shadow(e) {
+        /*
          const width = this.offsetWidth
          const height = this.offsetHeight
        */
-      const {
-        //태그에 대한 크기 값
-        offsetWidth: width,
-        offsetHeight: height
-      } = this;
+        const {
+          //태그에 대한 크기 값
+          offsetWidth: width,
+          offsetHeight: height,
+        } = this;
 
-      /*
+        /*
         let x = e.offsetX
         let y = e.offsetY
       */
-      let {
-        //이벤트에 대한 상대적 위치 값
-        offsetX: x,
-        offsetY: y
-      } = e;
+        let {
+          //이벤트에 대한 상대적 위치 값
+          offsetX: x,
+          offsetY: y,
+        } = e;
 
-      //마우스무브 이벤트가 h1 태그 밖으로 벗어났을 경우!! 
-      if (this !== e.target) {
-        //this = div.hero 
-        //e.target = h1
-        x = x + e.target.offsetLeft; //기존 x 값에 offsetLeft 값을 추가
-        y = y + e.target.offsetTop; //기존 y 값에 offsetTop 값을 추가
+        //마우스무브 이벤트가 h1 태그 밖으로 벗어났을 경우!!
+        if (this !== e.target) {
+          //this = div.hero
+          //e.target = h1
+          x = x + e.target.offsetLeft; //기존 x 값에 offsetLeft 값을 추가
+          y = y + e.target.offsetTop; //기존 y 값에 offsetTop 값을 추가
 
-        // => 마우스가 벗어나도 끊김이 사라진다 
-      }
+          // => 마우스가 벗어나도 끊김이 사라진다
+        }
 
-      // console.log((x / width * walk) - (walk / 2));
+        // console.log((x / width * walk) - (walk / 2));
 
-      const xWalk = Math.round((x / width * walk) - (walk / 2));
-      const yWalk = Math.round((y / height * walk) - (walk / 2));
-      //=> 기존의 범위에서 원하는 만큼 범위를 축소
+        const xWalk = Math.round((x / width) * walk - walk / 2);
+        const yWalk = Math.round((y / height) * walk - walk / 2);
+        //=> 기존의 범위에서 원하는 만큼 범위를 축소
+        //(x / width * walk) = 백분율로 변경
+        //(walk / 2) = 평행 이동
 
-      text.style.textShadow = `
+        text.style.textShadow = `
         ${xWalk}px ${yWalk}px 0 rgba(255,0,255,0.7),
         ${xWalk * -1}px ${yWalk}px 0 rgba(0,255,255,0.7),
         ${yWalk}px ${xWalk * -1}px 0 rgba(0,255,0,0.7),
         ${yWalk * -1}px ${xWalk}px 0 rgba(0,0,255,0.7)
       `;
+      }
 
-    }
-
-    hero.addEventListener('mousemove', shadow);
-  </script>
-</body>
-
+      hero.addEventListener("mousemove", shadow);
+    </script>
+  </body>
 </html>
