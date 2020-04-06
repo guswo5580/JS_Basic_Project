@@ -16,8 +16,9 @@ function togglePlay() {
   //   video.pause();
   // }
 
+  //video 내의 paused 속성
   const method = video.paused ? "play" : "pause";
-  video[method](); //video[] === video.
+  video[method](); //video[] === video. -> video.method()
 }
 
 function updateButton() {
@@ -28,6 +29,7 @@ function updateButton() {
 
 function skip() {
   //Video 진행 시간 변경
+  //currentTime = float 타입값
   video.currentTime += parseFloat(this.dataset.skip); //dataset.skip = data-skip의 값 : 25 or -10
 }
 

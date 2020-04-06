@@ -118,7 +118,10 @@ body {
 /* 재생 진행 현황 표시 */
 .progress__filled {
   background: #ffc600;
+
+  /* .progress 하위에서 초기 영역 값 = 0  */
   flex: 0;
+  /* 시간의 흐름에 따라 영역 값을 basis로 증가  */
   flex-basis: 0%;
 }
 
