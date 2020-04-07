@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Sort Without Articles</title>
+</head>
+
+<body>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: url("https://source.unsplash.com/nDqA4d5NL0k/2000x2000");
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    #bands {
+      list-style: inside square;
+      font-size: 20px;
+      background: white;
+      width: 500px;
+      margin: auto;
+      padding: 0;
+      box-shadow: 0 0 0 20px rgba(0, 0, 0, 0.05);
+    }
+
+    #bands li {
+      border-bottom: 1px solid #efefef;
+      padding: 20px;
+    }
+
+    #bands li:last-child {
+      border-bottom: 0;
+    }
+
+    a {
+      color: #ffc600;
+      text-decoration: none;
+    }
+  </style>
+
+  <ul id="bands"></ul>
+
+  <script>
+    const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'Norma Jean', 'The Bled',
+      'Say Anything', 'The Midway State', 'We Came as Romans', 'Counterparts', 'Oh, Sleeper', 'A Skylit Drive',
+      'Anywhere But Here', 'An Old Dog'
+    ];
+
+    function strip(bandName) {
+      //(/^(a |the |an )/i, '')
+      //문자열 맨 앞의 a, an, the (대문자 포함)을 찾아 ""공백으로 바꾼다 
+      return bandName.replace(/^(a |the |an )/i, '').trim();
+    }
+    //replace(string1, string2) : string1을 찾아 string2로 바꾼다 
+    //trim : 문자열의 맨 앞, 맨 뒤의 공백을 제거 (중간의 공백은 제거하지 않는다)
+    //모든 공백을 제거하고 싶다면? 정규식 이용 
+    //array.replace(/ /gi, "")
+    //array.replace(/\s/gi, "")
+
+    /*
+      sort 기본 
+      array.sort((a, b) => { //a와 b는 숫자, 문자를 포함한 여러 타입의 value를 받는 인자 
+        if(a > b) return 1;
+        else return -1; 
+        //정렬의 참과 거짓은 "1"과 "-1"로 표현 
+      })
+    */
+    const sortedBands = bands.sort((a, b) => strip(a) > strip(b) ? 1 : -1);
+
+    document.querySelector('#bands').innerHTML =
+      sortedBands
+      .map(band => `<li>${band}</li>`)
+      .join('');
+
+    console.log(sortedBands);
+  </script>
+
+</body>
+
+</html>
