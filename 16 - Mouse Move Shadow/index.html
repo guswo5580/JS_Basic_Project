@@ -76,7 +76,7 @@
         const xWalk = Math.round((x / width) * walk - walk / 2);
         const yWalk = Math.round((y / height) * walk - walk / 2);
         //=> 기존의 범위에서 원하는 만큼 범위를 축소
-        //(x / width * walk) = 백분율로 변경
+        //(x / width * walk) = 백분율로 변경 --- (x / width * walk)가 양수라면 = 0 ~ 100의 값이 나온다
         //(walk / 2) = 평행 이동
 
         text.style.textShadow = `
