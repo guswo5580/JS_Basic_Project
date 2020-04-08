@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Speech Synthesis</title>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="voiceinator">
+
+    <h1>The Voiceinator 5000</h1>
+
+    <select name="voice" id="voices">
+      <option value="">Select A Voice</option>
+      <!-- SpeechSynthesisUtterance api에서 받은 name, lang을 바탕으로 옵션 생성 -->
+    </select>
+
+    <label for="rate">Rate:</label>
+    <input name="rate" type="range" min="0" max="3" value="1" step="0.1">
+
+    <label for="pitch">Pitch:</label>
+    <input name="pitch" type="range" min="0" max="2" step="0.1">
+
+    <textarea name="text">Hello! I love JavaScript 👍</textarea>
+
+    <button id="stop">Stop!</button>
+    <button id="speak">Speak</button>
+
+  </div>
+
+  <script>
+    const SpeechObject = new SpeechSynthesisUtterance(); //객체를 생성자로 연결
+
+    let voices = [];
+
+    const voicesDropdown = document.querySelector('[name="voice"]');
+
+    const options = document.querySelectorAll(
+      '[type="range"], [name="text"]'); //input의 공통 type, 다른 name을 이용해 querySelectorAll 적용
+
+    const speakButton = document.querySelector('#speak');
+    const stopButton = document.querySelector('#stop');
+
+    //SpeechSynthesisUtterance에 전송할 textarea 내의 text value 추출 
+    SpeechObject.text = document.querySelector('[name="text"]').value;
+    // console.log(SpeechObject);
+
+
+    //SpeechSynthesisUtterance 구동
+    function populateVoices() {
+      voices = this.getVoices(); //SpeechSynthesisUtterance api에서 이용가능한 voice를 추출
+      // console.log(voices);
+
+      voicesDropdown.innerHTML = voices
+        .filter(voice => voice.lang.includes('en'))
+        .map(voice => `<option value="${voice.name}">${voice.name} (${voice.lang})</option>`)
+        .join('');
+    }
+
+    function setVoice() { //목소리, 언어 설정
+      // SpeechObject.voice 기본값 = null 
+      SpeechObject.voice = voices.find(voice => voice.name === this.value);
+
+      //voice.name = SpeechObject 내에 저장된 voices 중 하나의 이름
+      //this.value = option으로 선택된 이름값을 가진 value  
+
+      toggle();
+    }
+
+    function setOption() { //input name , (input)range value 
+      console.log(this.name, this.value);
+      SpeechObject[this.name] = this.value;
+      toggle();
+    }
+
+    function toggle(startOver = true) {
+      speechSynthesis.cancel(); //stop
+      if (startOver) {
+        speechSynthesis.speak(SpeechObject); //restart
+      }
+    }
+
+
+    //SpeechSynthesisUtterance 이벤트 중 음성, text의 변화를 감지
+    speechSynthesis.addEventListener('voiceschanged', populateVoices);
+
+    //select > option을 선택하여 값이 변하는 이벤트 인식
+    voicesDropdown.addEventListener('change', setVoice);
+
+    options.forEach(option => option.addEventListener('change', setOption));
+
+    //start, stop button value
+    speakButton.addEventListener('click', toggle);
+    stopButton.addEventListener('click', () => toggle(false));
+  </script>
+
+</body>
+
+</html>
