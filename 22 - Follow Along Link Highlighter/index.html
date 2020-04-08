@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>👀👀👀Follow Along Nav</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- a 태그에 대해 hightlight를 표현해 줄 것 -->
+  <nav>
+    <ul class="menu">
+      <li><a href="">Home</a></li>
+      <li><a href="">Order Status</a></li>
+      <li><a href="">Tweets</a></li>
+      <li><a href="">Read Our History</a></li>
+      <li><a href="">Contact Us</a></li>
+    </ul>
+  </nav>
+
+  <div class="wrapper">
+    <p>Lorem ipsum dolor sit amet, <a href="">consectetur</a> adipisicing elit. Est <a href="">explicabo</a> unde natus
+      necessitatibus esse obcaecati distinctio, aut itaque, qui vitae!</p>
+    <p>Aspernatur sapiente quae sint <a href="">soluta</a> modi, atque praesentium laborum pariatur earum <a
+        href="">quaerat</a> cupiditate consequuntur facilis ullam dignissimos, aperiam quam veniam.</p>
+    <p>Cum ipsam quod, incidunt sit ex <a href="">tempore</a> placeat maxime <a href="">corrupti</a> possimus <a
+        href="">veritatis</a> ipsum fugit recusandae est doloremque? Hic, <a href="">quibusdam</a>, nulla.</p>
+    <p>Esse quibusdam, ad, ducimus cupiditate <a href="">nulla</a>, quae magni odit <a href="">totam</a> ut consequatur
+      eveniet sunt quam provident sapiente dicta neque quod.</p>
+    <p>Aliquam <a href="">dicta</a> sequi culpa fugiat <a href="">consequuntur</a> pariatur optio ad minima, maxime <a
+        href="">odio</a>, distinctio magni impedit tempore enim repellendus <a href="">repudiandae</a> quas!</p>
+  </div>
+
+  <script>
+    const triggers = document.querySelectorAll('a'); //hightlight가 수행될 지점
+
+    //highlight = span 태그를 이용해 body에 삽입
+    const highlight = document.createElement('span');
+    highlight.classList.add('highlight');
+    document.body.appendChild(highlight); //body에 삽입 해야 body 내 전체 a 태그에 대해 적용이 가능 
+
+    function highlightLink() {
+      //console.log(this); 현재 highlight가 실행된 a 반환
+      const linkCoords = this.getBoundingClientRect();
+      //현재 Element의 position 및 viewport를 반환, Element의 width + padding을 같이 반환
+      console.log(linkCoords);
+
+      const coords = {
+        width: linkCoords.width, //viewPort된 element의 width
+        height: linkCoords.height, //viewPort된 element의 height
+
+        //Element의 top, left는 고정! --- Client의 Scroll에 따라 위치를 조정해준다
+        top: linkCoords.top + window.scrollY,
+        left: linkCoords.left + window.scrollX
+      };
+
+      highlight.style.width = `${coords.width}px`;
+      highlight.style.height = `${coords.height}px`;
+
+      //이전 highlight 위치에서 현재 highlight 위치로 이동
+      highlight.style.transform = `translate(${coords.left}px, ${coords.top}px)`;
+    }
+
+    //a 태그 "위에 마우스가 위치"한 것을 찾아낸다
+    triggers.forEach(a => a.addEventListener('mouseenter', highlightLink));
+  </script>
+</body>
+
+</html>
