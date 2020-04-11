@@ -1,97 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Click and Drag</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <title>Click and Drag</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+  <body>
+    <div class="items">
+      <div class="item item1">01</div>
+      <div class="item item2">02</div>
+      <div class="item item3">03</div>
+      <div class="item item4">04</div>
+      <div class="item item5">05</div>
+      <div class="item item6">06</div>
+      <div class="item item7">07</div>
+      <div class="item item8">08</div>
+      <div class="item item9">09</div>
+      <div class="item item10">10</div>
+      <div class="item item11">11</div>
+      <div class="item item12">12</div>
+      <div class="item item13">13</div>
+      <div class="item item14">14</div>
+      <div class="item item15">15</div>
+      <div class="item item16">16</div>
+      <div class="item item17">17</div>
+      <div class="item item18">18</div>
+      <div class="item item19">19</div>
+      <div class="item item20">20</div>
+      <div class="item item21">21</div>
+      <div class="item item22">22</div>
+      <div class="item item23">23</div>
+      <div class="item item24">24</div>
+      <div class="item item25">25</div>
+    </div>
 
-<body>
-  <div class="items">
-    <div class="item item1">01</div>
-    <div class="item item2">02</div>
-    <div class="item item3">03</div>
-    <div class="item item4">04</div>
-    <div class="item item5">05</div>
-    <div class="item item6">06</div>
-    <div class="item item7">07</div>
-    <div class="item item8">08</div>
-    <div class="item item9">09</div>
-    <div class="item item10">10</div>
-    <div class="item item11">11</div>
-    <div class="item item12">12</div>
-    <div class="item item13">13</div>
-    <div class="item item14">14</div>
-    <div class="item item15">15</div>
-    <div class="item item16">16</div>
-    <div class="item item17">17</div>
-    <div class="item item18">18</div>
-    <div class="item item19">19</div>
-    <div class="item item20">20</div>
-    <div class="item item21">21</div>
-    <div class="item item22">22</div>
-    <div class="item item23">23</div>
-    <div class="item item24">24</div>
-    <div class="item item25">25</div>
-  </div>
+    <script>
+      const slider = document.querySelector(".items"); //최상단 div
+      let isDown = false; //마우스 클릭 여부
 
-  <script>
-    const slider = document.querySelector('.items'); //최상단 div
-    let isDown = false; //마우스 클릭 여부
+      let startX; //마우스를 클릭한 x 좌표
+      let scrollLeft;
 
-    let startX; //마우스를 클릭한 x 좌표
-    let scrollLeft;
+      //움직임 활성화
+      slider.addEventListener("mousedown", (e) => {
+        isDown = true;
 
-    //움직임 활성화
-    slider.addEventListener('mousedown', (e) => {
-      isDown = true;
+        slider.classList.add("active");
 
-      slider.classList.add('active');
+        startX = e.pageX - slider.offsetLeft;
+        //pageX = 전제 브라우저 내 해당 마우스의 위치좌표
+        //offsetLeft = 부모의 요소를 기준으로 측정한 상대 좌표 --- 부모의 position이 반드시 relative이어야 한다
+        //relative가 하나도 없다면 최고 상단인 browser를 기준으로 상대 좌표를 반환
 
-      startX = e.pageX - slider.offsetLeft;
-      //pageX = 전제 브라우저 내 해당 마우스의 위치좌표
-      //offsetLeft = 부모의 요소를 기준으로 측정한 상대 좌표 --- 부모의 position이 반드시 relative이어야 한다 
-      //relative가 하나도 없다면 최고 상단인 browser를 기준으로 상대 좌표를 반환 
+        scrollLeft = slider.scrollLeft; //스크롤이 발생한 위치까지의 값을 저장
+      });
 
-      scrollLeft = slider.scrollLeft; //스크롤이 발생한 위치까지의 값을 저장
-    });
+      slider.addEventListener("mousemove", (e) => {
+        if (!isDown) return; //mousedown 이벤트 발생 후에만 실행하도록
 
+        e.preventDefault(); //user-select : none과 마찬가지로 텍스트 클릭 및 클라이언트의 동작을 제한
 
-    slider.addEventListener('mousemove', (e) => {
-      if (!isDown) return; //mousedown 이벤트 발생 후에만 실행하도록 
+        const x = e.pageX - slider.offsetLeft;
+        //스크롤 왼쪽 => 마우스 오른쪽 무브
+        //x = startX에서 음의 방향으로 멀어진다
+        //따라서 x < startX
 
-      e.preventDefault(); //user-select : none과 마찬가지로 텍스트 클릭 및 클라이언트의 동작을 제한 
+        const walk = (x - startX) * 3;
+        //결국 walk = 음수!!!!
 
-      const x = e.pageX - slider.offsetLeft;
-      //스크롤 왼쪽 => 마우스 오른쪽 무브
-      //x = startX에서 음의 방향으로 멀어진다
-      //따라서 x < startX 
+        // console.log(walk);
 
-      const walk = (x - startX) * 3;
-      //결국 walk = 음수!!!! 
+        slider.scrollLeft = scrollLeft - walk;
+        //스크롤된 상황을 저장
+        //walk = 음수 이므로 scrollLeft에 -로 해주거나 절댓값을 더해준다
+      });
 
-      // console.log(walk);
-
-      slider.scrollLeft = scrollLeft - walk;
-      //스크롤된 상황을 저장
-      //walk = 음수 이므로 scrollLeft에 -로 해주거나 절댓값을 더해준다 
-
-    });
-
-
-    //움직임 비활성화
-    slider.addEventListener('mouseleave', () => {
-      isDown = false;
-      slider.classList.remove('active');
-    });
-    //움직임 비활성화
-    slider.addEventListener('mouseup', () => {
-      isDown = false;
-      slider.classList.remove('active');
-    });
-  </script>
-
-</body>
-
+      //움직임 비활성화
+      slider.addEventListener("mouseleave", () => {
+        isDown = false;
+        slider.classList.remove("active");
+      });
+      slider.addEventListener("mouseup", () => {
+        isDown = false;
+        slider.classList.remove("active");
+      });
+    </script>
+  </body>
 </html>
